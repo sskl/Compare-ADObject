@@ -137,15 +137,12 @@ Param(
             # What if the user hits the Cancel button in the OGV?
             Return
         } Else {
-            $InstallDate = ($Choice.InstallDate.Split("."))[0].Trim()
-            $FilterDate = [DateTime]::ParseExact($InstallDate, "yyyyMMddHHmmss", $null)
+            $Date = ($Choice.ExposedName -split "_")[1].Trim()
+            $FilterDate = [DateTime]::ParseExact($Date, "yyyyMMddHHmm", $null)
         }
     }
 
-    # Convert DateTime to Generalized-Time format for using LDAP filter.
-    $Date = $FilterDate.ToUniversalTime().ToString("yyyyMMddHHmmss.0Z")
-
-    Write-Verbose "FilterDate = $Date"
+    Write-Verbose "FilterDate = $FilterDate"
     Write-Verbose "SearchBase = $SearchBase"
     Write-Verbose "ObjectClass = $ObjectClass"
     Write-Verbose "MatchingProperty = $MatchingProperty"
@@ -159,7 +156,7 @@ Param(
     }
 
     try {
-        $SourceObjects = Get-ADObject -LDAPFilter "(&(ObjectClass=$ObjectClass)(whenChanged>=$Date))" -SearchBase $SearchBase -Properties $PropertiesGet -Server "$($SourceServer):$($SourceLDAPPort)" -IncludeDeletedObjects:$IncludeDeletedObjects -ErrorAction Stop |
+        $SourceObjects = Get-ADObject -Filter 'ObjectClass -eq $ObjectClass -and whenChanged -gt $FilterDate' -SearchBase $SearchBase -Properties $PropertiesGet -Server "$($SourceServer):$($SourceLDAPPort)" -IncludeDeletedObjects:$IncludeDeletedObjects -ErrorAction Stop |
                          Select-Object -Property * -ExcludeProperty $ExcludeProperty
     } catch {
         $SourceObjects = $null
@@ -175,8 +172,9 @@ Param(
     $SourceObjects | ForEach-Object {
 
         $SourceObject = $PSItem
+        $MatchingPropertyValue = $SourceObject.$MatchingProperty
 
-        $DestinationObject = Get-ADObject -LDAPFilter "(&(ObjectClass=$ObjectClass)($MatchingProperty=$($SourceObject.$MatchingProperty)))" -Properties $PropertiesGet -Server "$($DestinationServer):$($DestinationLDAPPort)" -IncludeDeletedObjects:$IncludeDeletedObjects -ErrorAction Stop |
+        $DestinationObject = Get-ADObject -Filter 'ObjectClass -eq $ObjectClass -and $MatchingProperty -eq $MatchingPropertyValue' -Properties $PropertiesGet -Server "$($DestinationServer):$($DestinationLDAPPort)" -IncludeDeletedObjects:$IncludeDeletedObjects -ErrorAction Stop |
                              Select-Object -Property * -ExcludeProperty $ExcludeProperty
 
         $DestinationObjectOU = $DestinationObject.DistinguishedName -replace '^.+?,(CN|OU.+)', '$1'
