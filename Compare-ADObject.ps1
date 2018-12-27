@@ -153,7 +153,7 @@ Param(
     }
 
     try {
-        $SourceObjects = Get-ADObject -LDAPFilter "(&(ObjectClass=$ObjectClass)(whenChanged>=$Date))" -SearchBase $SearchBase -Properties $PropertiesGet -Server $($SourceServer):$($SourceLDAPPort) -IncludeDeletedObjects -ErrorAction Stop |
+        $SourceObjects = Get-ADObject -LDAPFilter "(&(ObjectClass=$ObjectClass)(whenChanged>=$Date))" -SearchBase $SearchBase -Properties $PropertiesGet -Server "$($SourceServer):$($SourceLDAPPort)" -IncludeDeletedObjects -ErrorAction Stop |
                          Select-Object -Property * -ExcludeProperty $ExcludeProperty
     } catch {
         $SourceObjects = $null
@@ -170,7 +170,7 @@ Param(
 
         $SourceObject = $PSItem
 
-        $DestinationObject = Get-ADObject -LDAPFilter "(&(ObjectClass=$ObjectClass)($MatchingProperty=$($SourceObject.$MatchingProperty)))" -Properties $PropertiesGet -Server $($DestinationServer):$($DestinationLDAPPort) -ErrorAction Stop |
+        $DestinationObject = Get-ADObject -LDAPFilter "(&(ObjectClass=$ObjectClass)($MatchingProperty=$($SourceObject.$MatchingProperty)))" -Properties $PropertiesGet -Server "$($DestinationServer):$($DestinationLDAPPort)" -ErrorAction Stop |
                              Select-Object -Property * -ExcludeProperty $ExcludeProperty
 
         $DestinationObjectOU = $DestinationObject.DistinguishedName -replace '^.+?,(CN|OU.+)', '$1'
