@@ -110,7 +110,7 @@ Param(
     [string]
     $ObjectClass = "User",
     [Parameter(Mandatory=$false)]
-    [ValidateSet("sAMAccountName", "objectGUID", "DistinguishedName")]
+    [ValidateSet("sAMAccountName", "objectGuid", "DistinguishedName")]
     [string]
     $MatchingProperty = "sAMAccountName",
     [Parameter(Mandatory=$false)]
