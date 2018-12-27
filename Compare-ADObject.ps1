@@ -242,8 +242,8 @@ Param(
                     Write-Verbose "$($SourceObject.$MatchingProperty) $Property property has same value. (SourceValue = $SourceValue, DestinationValue = $DestinationValue)"
                 } Else {
                     # Is this a multi-value attribute?
-                    $PropertiesDefinition = $SourceObject | Get-Member | Where-Object { $_.Name -eq $Property } | Select-Object -ExpandProperty Definition
-                    If ($PropertiesDefinition -match "ADPropertyValueCollection|ActiveDirectorySecurity|HashSet|byte\[\]") {
+                    $PropertyDefinition = $SourceObject | Get-Member | Where-Object { $_.Name -eq $Property } | Select-Object -ExpandProperty Definition
+                    If ($PropertyDefinition -match "ADPropertyValueCollection|ActiveDirectorySecurity|HashSet|byte\[\]") {
 
                         # If either of the values are NULL, then Compare-Object will error.
                         If (($null -eq $SourceValue) -or ($null -eq $DestinationValue)) {
