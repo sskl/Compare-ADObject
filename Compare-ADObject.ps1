@@ -38,6 +38,9 @@ Function Compare-ADObject {
 .PARAMETER MatchingProperty
     Uses for locate the object to destination source.
     Default uses sAMAccountName.
+.PARAMETER IncludeDeletedObjects
+    Uses for retrieves deleted objects and the deactivated forward and backward links.
+    Default set to false. Not include deleted objects and links.
 .PARAMETER Output
     Uses for user friendly viewing the changed objects.
 .OUTPUTS
@@ -114,6 +117,9 @@ Param(
     [string]
     $MatchingProperty = "sAMAccountName",
     [Parameter(Mandatory=$false)]
+    [switch]
+    $IncludeDeletedObjects = $false,
+    [Parameter(Mandatory=$false)]
     [ValidateSet("Html")]
     [string]
     $Output
@@ -153,7 +159,7 @@ Param(
     }
 
     try {
-        $SourceObjects = Get-ADObject -LDAPFilter "(&(ObjectClass=$ObjectClass)(whenChanged>=$Date))" -SearchBase $SearchBase -Properties $PropertiesGet -Server "$($SourceServer):$($SourceLDAPPort)" -IncludeDeletedObjects -ErrorAction Stop |
+        $SourceObjects = Get-ADObject -LDAPFilter "(&(ObjectClass=$ObjectClass)(whenChanged>=$Date))" -SearchBase $SearchBase -Properties $PropertiesGet -Server "$($SourceServer):$($SourceLDAPPort)" -IncludeDeletedObjects:$IncludeDeletedObjects -ErrorAction Stop |
                          Select-Object -Property * -ExcludeProperty $ExcludeProperty
     } catch {
         $SourceObjects = $null
@@ -170,7 +176,7 @@ Param(
 
         $SourceObject = $PSItem
 
-        $DestinationObject = Get-ADObject -LDAPFilter "(&(ObjectClass=$ObjectClass)($MatchingProperty=$($SourceObject.$MatchingProperty)))" -Properties $PropertiesGet -Server "$($DestinationServer):$($DestinationLDAPPort)" -ErrorAction Stop |
+        $DestinationObject = Get-ADObject -LDAPFilter "(&(ObjectClass=$ObjectClass)($MatchingProperty=$($SourceObject.$MatchingProperty)))" -Properties $PropertiesGet -Server "$($DestinationServer):$($DestinationLDAPPort)" -IncludeDeletedObjects:$IncludeDeletedObjects -ErrorAction Stop |
                              Select-Object -Property * -ExcludeProperty $ExcludeProperty
 
         $DestinationObjectOU = $DestinationObject.DistinguishedName -replace '^.+?,(CN|OU.+)', '$1'
