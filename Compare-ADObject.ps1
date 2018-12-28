@@ -280,7 +280,7 @@ Param(
     # Save output as html format.
     If ($Result -and $Output) {
         $FormattedOutput = $Result |
-            Select-Object Identity, SourceObject, DestinationObject, WhenChanged,
+            Select-Object Identity, sAMAccountName, SourceObject, DestinationObject, WhenChanged,
                     @{
                         Name='ChangedProperties';
                         Expression={ $PSItem.ChangedProperties |
