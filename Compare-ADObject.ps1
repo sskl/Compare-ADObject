@@ -46,6 +46,7 @@ Function Compare-ADObject {
 .OUTPUTS
     PowerShell custom object for viewing changed properties:
         Identity          : Matching property value.
+        sAMAccountName    : Source object sAMAccountName property value.
         SourceObject      : DistinguishedName of the object located in the source database (like current database)
         DestinationObject : DistinguishedName of the object located in the destination database (like snapshot database)
         ChangedProperties : Powershell custom object for viewing changed attributes
@@ -182,6 +183,7 @@ Param(
 
         $Object = New-Object -TypeName PSCustomObject -Property @{
             Identity          = $SourceObject.$MatchingProperty
+            sAMAccountName    = $SourceObject.sAMAccountName
             SourceObject      = $SourceObject.DistinguishedName
             DestinationObject = $DestinationObject.DistinguishedName
             ChangedProperties = @()
