@@ -103,7 +103,7 @@ Param(
     $Properties = "*",
     [parameter(Mandatory=$false)]
     [String[]]
-    $ExcludeProperty = @("lastLogoff","lastLogon","lastLogonTimestamp","logonCount","badPasswordTime","pwdLastSet","Modified","modifyTimeStamp","uSNChanged","msDS-AuthenticatedAtDC","msDS-FailedInteractiveLogonCount","msDS-FailedInteractiveLogonCountAtLastSuccessfulLogon","msDS-FailedInteractiveLogonTime","msDS-LastSuccessfulInteractiveLogonTime","DirXML-Associations","ACL","sDRightsEffective","dSCorePropagationData","msExchUMDtmfMap"),
+    $ExcludeProperty = @("lastLogoff","lastLogon","lastLogonTimestamp","logonCount","badPasswordTime","badPwdCount","Modified","modifyTimeStamp","uSNChanged","msDS-AuthenticatedAtDC","msDS-FailedInteractiveLogonCount","msDS-FailedInteractiveLogonCountAtLastSuccessfulLogon","msDS-FailedInteractiveLogonTime","msDS-LastSuccessfulInteractiveLogonTime","DirXML-Associations","ACL","sDRightsEffective","dSCorePropagationData","msExchUMDtmfMap"),
     [Parameter(Mandatory=$false)]
     [datetime]
     $FilterDate,
