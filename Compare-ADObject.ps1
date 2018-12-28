@@ -152,7 +152,7 @@ Param(
     $PropertiesGet = $PropertyNames = '*'
     # If $Properties parameter set, make sure all required parameters adding to $PropertiesGet variable.
     If ($Properties -ne '*') {
-        $PropertiesGet = $Properties + @("sAMAccountName", "objectGUID", "DistinguishedName", "Deleted", "objectClass")
+        $PropertiesGet = $Properties + @("sAMAccountName", "objectGUID", "DistinguishedName", "whenChanged", "Deleted", "objectClass")
         $PropertyNames = $Properties
     }
 
