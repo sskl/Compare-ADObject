@@ -10,7 +10,7 @@ Function Compare-ADObject {
 .PARAMETER DestinationLDAPPort
     Port of the destination database is mounted. Used for difference objects.
     Must be in the range 1025 to 65535.
-.PARAMETER DestinationServer
+.PARAMETER SourceServer
     Server name of the database where source objects are located.
     Default is localhost.
 .PARAMETER SourceLDAPPort
@@ -54,6 +54,7 @@ Function Compare-ADObject {
             OldValue : Destination object property value
             NewValue : Source object property value
         WhenChanged       : Source object whenChanged value
+        User              : Is source object User.
         Renamed           : Is CN attribute changed.
         Moved             : Compare source and destionation object location.
         Deleted           : Source object Deleted value
